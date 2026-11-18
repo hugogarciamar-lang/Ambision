@@ -1,0 +1,129 @@
+@import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+/* Design tokens — mirrored 1:1 from the Paper file "Calm comet". */
+@theme inline {
+  --color-ink: #000000;
+  --color-paper: #ffffff;
+  --color-mist: #f2f2f2;
+  --color-line: #eaeaea;
+  --color-fog: #929292;
+  --color-muted: #575757;
+  --color-signal: #72ce7b;
+  --color-forest: #193a29;
+  --color-sand: #a8927c;
+
+  --font-sans: var(--font-onest), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+
+  --radius-sm: 8px;
+  --radius-lg: 24px;
+}
+
+/* Page + nav palette, tweened by the hero exit (white page → black page, light nav → dark nav). */
+:root {
+  --page-bg: #ffffff;
+  --nav-fg: #000000;
+  --nav-line: #eaeaea;
+  --nav-btn-bg: #000000;
+  --nav-btn-fg: #ffffff;
+  /* 0 = palette above (as tweened by the hero), 1 = light palette (coverage exit → white sections). */
+  --nav-light: 0;
+  /* Background of the light nav: the coverage card's grey while the nav sits on it, white elsewhere. */
+  --nav-surface: #ffffff;
+  --nav-h: 80px;
+}
+
+/* Final nav colours: the hero-driven palette mixed towards the light one by --nav-light. */
+.site-nav {
+  --nl: calc(var(--nav-light) * 100%);
+  --n-bg: color-mix(in srgb, var(--nav-surface) var(--nl), var(--page-bg));
+  --n-fg: color-mix(in srgb, #000000 var(--nl), var(--nav-fg));
+  --n-line: color-mix(in srgb, #d4d4d4 var(--nl), var(--nav-line));
+  --n-btn-bg: color-mix(in srgb, #000000 var(--nl), var(--nav-btn-bg));
+  --n-btn-fg: color-mix(in srgb, #ffffff var(--nl), var(--nav-btn-fg));
+}
+
+html,
+body {
+  background: var(--page-bg);
+}
+
+html {
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-sans);
+  overflow-wrap: anywhere;
+}
+
+:focus-visible {
+  outline: 2px solid #5b8cff;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 16px;
+  top: -64px;
+  z-index: 100;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  padding: 12px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+}
+.skip-link:focus {
+  top: 16px;
+}
+
+/* Waveform bars scale around their own centre. */
+.wave-bar {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* Hero annotation targets: every piece is a 0,0-anchored layer moved only by transform. */
+.t-piece {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+}
+.t-chip {
+  contain: layout paint;
+  white-space: nowrap;
+}
+
+/* Decorative text drawn from a data attribute: invisible to assistive tech and audits. */
+.ps-text::before {
+  content: attr(data-text);
+  white-space: pre;
+}
+
+/* Masks used for clipped line / word reveals. Padding keeps descenders out of the clip. */
+.reveal-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
